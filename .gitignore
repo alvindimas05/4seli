@@ -18,4 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 
+# Remove unnecessary files
 /public/images
+/public/profiles
+/resources/*
