@@ -35,6 +35,6 @@ class Post extends Model
 
     public static function validate(string $id_post): bool
     {
-        return User::whereIdPost($id_post)->exists;
+        return Post::whereIdPost($id_post)->first() !== null;
     }
 }

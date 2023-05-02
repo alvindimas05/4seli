@@ -8,19 +8,25 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('rill', function (Blueprint $table) {
-            $table->integer("id_post");
-            $table->string("id_user", 36);
+            $table->integer('id_post');
+            $table->string('id_user', 36)->index('id_user');
+
+            $table->index(['id_post', 'id_user'], 'id_post');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('rill');
     }

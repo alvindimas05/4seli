@@ -18,6 +18,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereIdUser($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
+ * @property int $canComment
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCanComment($value)
+ * @property string|null $description
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDescription($value)
  * @mixin \Eloquent
  */
 class User extends Model
@@ -28,11 +32,11 @@ class User extends Model
     protected $table = "users",
         $primaryKey = "id_user",
         $keyType = "string",
-        $fillable = ["username", "password"];
+        $fillable = ["username", "password", "description"];
     public $timestamps = false;
 
     public static function validate(string $id_user): bool
     {
-        return User::whereIdUser($id_user)->exists;
+        return User::whereIdUser($id_user)->first() !== null;
     }
 }

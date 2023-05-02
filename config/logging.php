@@ -54,7 +54,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'name' => '4seli',
+            'channels' => ['single', 'slack'],
             'ignore_exceptions' => false,
         ],
 

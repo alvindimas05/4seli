@@ -8,22 +8,26 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->integer("id_post", true);
-            $table->string("title", 100);
-            $table->text("description");
-            $table->integer("rill")->default(0);
-            $table->integer("fek")->default(0);
+            $table->integer('id_post', true);
+            $table->string('title', 100);
+            $table->text('description');
+            $table->integer('rill')->default(0);
+            $table->integer('fek')->default(0);
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('posts');
     }
