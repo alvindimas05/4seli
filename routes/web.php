@@ -8,6 +8,7 @@ Route::controller(UserController::class)->prefix("users")->group(function(){
     Route::post("/create", "create");
     Route::post("/login", "login");
     Route::post("/profile", "profile");
+    Route::post("/follow", "follow");
     Route::get("/{id_user}", "show");
 });
 Route::controller(PostController::class)->prefix("posts")->group(function(){

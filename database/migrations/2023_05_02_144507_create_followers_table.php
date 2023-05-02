@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->string('id_user', 36)->primary();
-            $table->string('username', 30);
-            $table->string('password', 100);
-            $table->string('description', 200)->nullable();
-            $table->boolean('canComment');
+        Schema::create('followers', function (Blueprint $table) {
+            $table->string('id_user_me', 36);
+            $table->string('id_user_you', 36);
         });
     }
 
@@ -29,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('followers');
     }
 };

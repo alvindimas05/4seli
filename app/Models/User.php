@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCanComment($value)
  * @property string|null $description
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDescription($value)
+ * @property int $followers
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFollowers($value)
  * @mixin \Eloquent
  */
 class User extends Model
@@ -32,7 +34,12 @@ class User extends Model
     protected $table = "users",
         $primaryKey = "id_user",
         $keyType = "string",
-        $fillable = ["username", "password", "description"];
+        $fillable = ["username", "password", "description"],
+        $attributes = [
+            "description" => "Hello, I'm 4seli user!",
+            "followers" => 0,
+            "canComment" => 1
+        ];
     public $timestamps = false;
 
     public static function validate(string $id_user): bool
