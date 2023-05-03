@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Block;
 use App\Models\Followers;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\File;
 
 class UserController extends Controller
 {
@@ -32,6 +34,8 @@ class UserController extends Controller
     public function profile(Request $req){
         if(!User::validate($req->id_user)) return response();
         $user = User::whereIdUser($req->id_user);
+        $req->validate([ "image" => File::types(["jpg", "jpeg", "png"])->max(5 * 1024) ]);
+
         $req->file("image")->move(public_path()."/profiles", $user->first(["username"])->username);
         $user->update([ "description" => $req->description ]);
         return response()->json([ "success" => true ]);
@@ -50,6 +54,20 @@ class UserController extends Controller
             $follower->save();
         }
         User::whereIdUser($req->id_user_you)->increment("followers", $exist->first() !== null ? 1 : -1);
+        return response()->json([ "success" => true ]);
+    }
+    // id_user_me, id_user_you
+    public function block(Request $req){
+        if(!User::validate($req->id_user_me) || !User::validate($req->id_user_you)) return response();
+        $exist = Block::whereIdUserMe($req->id_user_me)->whereIdUserYou($req->id_user_you);
+        if($exist->first() !== null){
+            $exist->delete();
+        } else {
+            $block = new Block();
+            $block->id_user_me = $req->id_user_me;
+            $block->id_user_you = $req->id_user_you;
+            $block->save();
+        }
         return response()->json([ "success" => true ]);
     }
     function response(bool $success = true, string $msg = null){

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->foreign(['id_post'], 'comments_ibfk_1')->references(['id_post'])->on('posts')->onUpdate('CASCADE');
+            $table->foreign(['id_user'], 'comments_ibfk_2')->references(['id_user'])->on('users')->onUpdate('CASCADE');
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->dropForeign('comments_ibfk_1');
+            $table->dropForeign('comments_ibfk_2');
         });
     }
 };

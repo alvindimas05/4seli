@@ -15,10 +15,12 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->integer('id_post', true);
+            $table->string('id_user', 36)->index('id_user');
             $table->string('title', 100);
             $table->text('description');
             $table->integer('rill')->default(0);
             $table->integer('fek')->default(0);
+            $table->boolean('isImage');
         });
     }
 

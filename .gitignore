@@ -20,5 +20,6 @@ yarn-error.log
 
 # Remove unnecessary files
 /public/images
+/public/videos
 /public/profiles
 /resources/*

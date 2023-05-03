@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CanCommentJob;
+use App\Models\Block;
 use App\Models\Comment;
 use App\Models\Fek;
 use App\Models\Post;
@@ -11,13 +12,28 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\File;
 
 class PostController extends Controller
 {
-    public function show(string $id_post = null){
-        $posts = $id_post == null ? Post::paginate(10) : 
-        Post::whereIdPost($id_post)->first();
-        
+    public $min_rill_fek = 5;
+    // id_user?
+    public function show(Request $req, string $id_post = null, string $search = null, bool $trending = false){
+        $id_user = $req->id_user | null;
+        $posts = new Post;
+        if($id_post != null) $posts->whereIdPost($id_post);
+        if($search !== null) $posts->orWhere("title", "like", "%".$search."%")->orWhere("description", "like", "%".$search."%");
+        if($trending) $posts->where("rill", ">", $this->min_rill_fek)->orWhere("fek", ">", $this->min_rill_fek);
+
+        if($id_user !== null){
+            $blocks = Block::whereIdUserMe($id_user)->get(["id_user_you"]);
+            foreach($blocks as $block)
+                $posts->where("id_user", "<>", $block->id_user_you);
+        }
+
+        if($id_post === null) $posts = $posts->paginate(10);
+        else $posts = $posts->first();
+
         $comments = Comment::where(function(Builder $query) use ($posts, $id_post){
             if($id_post != null)
                 $query->orWhere("id_post", "=", $posts->id_post);
@@ -52,16 +68,27 @@ class PostController extends Controller
         }
         return response()->json($posts);
     }
+    public function trending(Request $req){
+        return $this->show($req, null, null, true);
+    }
+    // query
+    public function search(Request $req, string $query = null){
+        return $this->show($req, null, $query);
+    }
     // title, description, id_user
     public function create(Request $req){
         if(!User::validate($req->id_user)) return response();
+        $req->validate(["image" => File::types(["jpg", "png", "jpg", "gif", "mp4"])->max(5 * 1024)]);
 
+        $isImage = $req->file("image")->getClientOriginalExtension() != "mp4";
         $post = new Post();
+        $post->id_user = $req->id_user;
         $post->title = $req->title;
         $post->description = $req->description;
+        $post->isImage = $isImage;
         $post->save();
 
-        $req->file("image")->move(public_path()."/images", $post->id_post);
+        $req->file("image")->move(public_path().($isImage ? "/images" : "/videos"), $post->id_post);
         return response()->json([ "id_post" => $post->id_post ]);
     }
     // id_user, id_post, comment

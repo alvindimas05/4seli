@@ -17,5 +17,8 @@ Route::controller(PostController::class)->prefix("posts")->group(function(){
     Route::post("/fek", "fek");
     Route::get("/comment", "comments");
     Route::post("/comment", "comment");
+
+    Route::get("/search/{query}", "search");
+    Route::get("/trending", "trending");
     Route::get("/{id_post?}", "show");
 });

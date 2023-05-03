@@ -22,6 +22,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereIdPost($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereRill($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereTitle($value)
+ * @property int $isImage
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereIsImage($value)
+ * @property string $id_user
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereIdUser($value)
  * @mixin \Eloquent
  */
 class Post extends Model
@@ -30,7 +34,7 @@ class Post extends Model
 
     protected $table = "posts",
         $primaryKey = "id_post",
-        $fillable = ["title", "description"];
+        $fillable = ["id_user", "title", "description", "isImage"];
     public $timestamps = false;
 
     public static function validate(string $id_post): bool
